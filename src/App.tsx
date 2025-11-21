@@ -1,5 +1,5 @@
 function App() {
-  const hello = 'hellow world';
+  // const hello = 'hellow world';
 
   // this is comment
 

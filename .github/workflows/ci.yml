@@ -1,0 +1,30 @@
+name: ci-for-wallpaperv
+
+# run on push
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest #catthehacker in act
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      ## clean node module and install dependencies again
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      ##check the linting
+      - name: run lint
+        run: npm run lint
