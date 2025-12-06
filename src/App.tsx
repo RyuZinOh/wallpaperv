@@ -1,9 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
-import { CaretDownIcon, CloudArrowDownIcon } from '@phosphor-icons/react';
+import {
+  CaretDownIcon,
+  CloudArrowDownIcon,
+  CaretRightIcon
+} from '@phosphor-icons/react';
 import Background from './Layout/Background';
 import Slider from './Modules/Slider';
 import loaderGif from '/Assets/loader.gif';
 import type { Thumbnail, GitHubFile } from './types';
+import Contribution from './Modules/Contribution';
 
 function calculatePanningInfo(imgW: number, imgH: number) {
   const screenW = window.innerWidth;
@@ -26,8 +31,10 @@ export default function App() {
   const [smoothMouseX, setSmoothMouseX] = useState(0);
   const [switching, setSwitching] = useState(false);
   const [sliderOpen, setSliderOpen] = useState(false);
+  const [contributionOpen, setContributionOpen] = useState(false);
 
   const sliderRef = useRef<HTMLDivElement>(null);
+  const contributionRef = useRef<HTMLDivElement>(null);
 
   // Fetching Images from Github
   useEffect(() => {
@@ -51,7 +58,7 @@ export default function App() {
 
         setThumbnails(thumbs);
         if (thumbs.length > 0) {
-          loadImage(thumbs[69 + 1]); //default set when loading site
+          loadImage(thumbs[18 + 4]); //default set when loading site
         }
       } catch (e) {
         console.error(e);
@@ -113,7 +120,10 @@ export default function App() {
     <div
       className="fixed inset-0 bg-black"
       onMouseMove={e => {
-        if (!sliderRef.current?.contains(e.target as Node)) {
+        if (
+          !sliderRef.current?.contains(e.target as Node) &&
+          !contributionRef.current?.contains(e.target as Node)
+        ) {
           setMouseX(e.clientX);
         }
       }}
@@ -139,12 +149,12 @@ export default function App() {
       {/* toggling slider[selector] component */}
       <button
         onClick={() => setSliderOpen(!sliderOpen)}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 rounded-full p-3  hover:cursor-pointer"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 rounded-full p-3 hover:cursor-pointer"
         style={{
           backdropFilter: 'blur(16px)',
           background: 'rgba(0,0,0,0.6)',
           transform: sliderOpen
-            ? 'translateX(-50%) translateY(-240px)'
+            ? 'translateX(-50%) translateY(-260px)'
             : 'translateX(-50%) translateY(0)'
         }}
       >
@@ -154,6 +164,34 @@ export default function App() {
           className="text-white"
           style={{
             transform: sliderOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: '0.3s ease'
+          }}
+        />
+      </button>
+
+      {/* conntribution Notice */}
+      <Contribution
+        isOpen={contributionOpen}
+        contributionRef={contributionRef}
+        onClose={() => setContributionOpen(false)}
+      />
+
+      {/* toggling contribution component */}
+      <button
+        onClick={() => setContributionOpen(!contributionOpen)}
+        className="fixed top-6 right-6 z-30 rounded-full p-3 hover:cursor-pointer transition-transform"
+        style={{
+          backdropFilter: 'blur(16px)',
+          background: 'rgba(0,0,0,0.6)',
+          transform: contributionOpen ? 'translateX(-500px)' : 'translateX(0)'
+        }}
+      >
+        <CaretRightIcon
+          size={28}
+          weight="bold"
+          className="text-white"
+          style={{
+            transform: contributionOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: '0.3s ease'
           }}
         />
