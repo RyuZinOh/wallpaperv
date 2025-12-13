@@ -2,13 +2,15 @@ import { useEffect, useState, useRef } from 'react';
 import {
   CaretDownIcon,
   CloudArrowDownIcon,
-  CaretRightIcon
+  CaretRightIcon,
+  InfoIcon
 } from '@phosphor-icons/react';
 import Background from './Layout/Background';
 import Slider from './Modules/Slider';
 import loaderGif from '/Assets/loader.gif';
 import type { Thumbnail, GitHubFile } from './types';
 import Contribution from './Modules/Contribution';
+import Metadata from './Modules/Metadata';
 
 function calculatePanningInfo(imgW: number, imgH: number) {
   const screenW = window.innerWidth;
@@ -32,9 +34,11 @@ export default function App() {
   const [switching, setSwitching] = useState(false);
   const [sliderOpen, setSliderOpen] = useState(false);
   const [contributionOpen, setContributionOpen] = useState(false);
+  const [metadataOpen, setMetadataOpen] = useState(false);
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const contributionRef = useRef<HTMLDivElement>(null);
+  const metadataRef = useRef<HTMLDivElement>(null);
 
   // Fetching Images from Github
   useEffect(() => {
@@ -122,7 +126,8 @@ export default function App() {
       onMouseMove={e => {
         if (
           !sliderRef.current?.contains(e.target as Node) &&
-          !contributionRef.current?.contains(e.target as Node)
+          !contributionRef.current?.contains(e.target as Node) &&
+          !metadataRef.current?.contains(e.target as Node)
         ) {
           setMouseX(e.clientX);
         }
@@ -144,6 +149,13 @@ export default function App() {
         onSelect={loadImage}
         isOpen={sliderOpen}
         sliderRef={sliderRef}
+      />
+
+      {/* Metadata*/}
+      <Metadata
+        isOpen={metadataOpen}
+        metadataRef={metadataRef}
+        selectedImage={selectedImage}
       />
 
       {/* toggling slider[selector] component */}
@@ -200,10 +212,31 @@ export default function App() {
       {/* // for user to download  */}
       <button
         onClick={handleDownload}
-        className="fixed bottom-6 right-6 z-30 rounded-full p-4  hover:cursor-pointer"
+        className="fixed bottom-6 right-6 z-30 rounded-full p-4 hover:cursor-pointer"
         style={{ backdropFilter: 'blur(16px)', background: 'rgba(0,0,0,0.6)' }}
       >
         <CloudArrowDownIcon size={28} weight="bold" className="text-white" />
+      </button>
+
+      {/* toggling metadata component */}
+      <button
+        onClick={() => setMetadataOpen(!metadataOpen)}
+        className="fixed top-6 left-6 z-30 rounded-full p-3 hover:cursor-pointer transition-transform"
+        style={{
+          backdropFilter: 'blur(16px)',
+          background: 'rgba(0,0,0,0.6)',
+          transform: metadataOpen ? 'translateX(820px)' : 'translateX(0)'
+        }}
+      >
+        <InfoIcon
+          size={28}
+          weight="bold"
+          className="text-white"
+          style={{
+            transform: metadataOpen ? 'rotate(0deg)' : 'rotate(0deg)',
+            transition: '0.3s ease'
+          }}
+        />
       </button>
 
       {/* //loader gif when switching */}
