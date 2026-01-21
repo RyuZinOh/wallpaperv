@@ -62,7 +62,8 @@ export default function App() {
 
         setThumbnails(thumbs);
         if (thumbs.length > 0) {
-          loadImage(thumbs[18 + 4]); //default set when loading site
+          const defaultImage = thumbs.find(t => t.name === 'fujino.jpeg');
+          loadImage(defaultImage ?? thumbs[10]); //default set when loading site [but I am fujimoto biased ahahahah]
         }
       } catch (e) {
         console.error(e);
